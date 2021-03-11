@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
 import Main from './Main';
 import Footer from './Footer';
 
@@ -19,24 +20,29 @@ function App() {
         setAddPlacePopupOpen(true);
     }
 
+    function handleCardClick(name, link) {
+        setSelectedCard({name: name, link: link, isOpen: true});
+    }
+
     function closeAllPopups() {
         setEditAvatarPopupOpen(false);
         setEditProfilePopupOpen(false);
         setAddPlacePopupOpen(false);
-
+        setSelectedCard(false);
     }
 
 
     const[isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
     const[isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
     const[isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+    const[selectedCard, setSelectedCard] = React.useState({name: ' ', link: ' ', isOpen: ' '});
 
 
   return (
     <div className="page">
         <Header />
-        <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
-        
+        <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
+        <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
         <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} children={[
             <>
                  <input type="text"

@@ -1,17 +1,18 @@
 import React from 'react';
 import api from '../utils/api';
+import Card from '../components/Card';
 
 function Main(props) {
 
     const[userName, setUserName] = React.useState();
     const[userDescription, setUserDescription] = React.useState();
     const[userAvatar, setUserAvatar] = React.useState();
+    const[cards, setCards] = React.useState([]);
 
     React.useEffect(() => {
         api
         .getProfileInfo()
         .then(res => {
-            console.log(res, "res");
             setUserName(res.name);
             setUserDescription(res.about);
             setUserAvatar(res.avatar);
@@ -19,6 +20,17 @@ function Main(props) {
     .catch((err) => {
         console.log(err)
     })
+    }, [])
+
+    React.useEffect(() => {
+        api
+        .getInitialCards()
+        .then(cards => {
+            setCards(cards)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }, [])
 
     return (
@@ -40,19 +52,16 @@ function Main(props) {
             </section>
             <section className="cards">
                 <ul className="cards__list">
-                    <template className="card-template">
-                        <li className="card">
-                            <img className="card__image" src='https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg' alt="изображение"/>
-                            <div className="card__info">
-                                <h2 className="card__name"></h2>
-                                <div className="card__button-like-container">
-                                    <button type="button" className="card__button-like"></button>
-                                    <p className="likes-counter">0</p>
-                                </div>
-                            </div>  
-                            <button type="button" className="card__button-delete"></button>
-                        </li>
-                    </template>
+                    {cards.map((card, i) => {
+                        return <Card
+                                    card= {{card}} 
+                                    name = {card.name} 
+                                    link={card.link} 
+                                    alt={card.alt}
+                                    id={card._id} 
+                                    likes={card.likes.length} 
+                                    onCardClick={props.onCardClick} />
+                    })}
                 </ul>
             </section>
         </main>
