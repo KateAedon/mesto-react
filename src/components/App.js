@@ -43,7 +43,7 @@ function App() {
         <Header />
         <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
         <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
-        <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} children={[
+        <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} children={(
             <>
                  <input type="text"
                              id="profile-form-name"
@@ -68,8 +68,8 @@ function App() {
                              placeholder="О себе"/>
                      <span id="profile-form-description-error" className="error"></span>
              </>
-         ]}/>
-         <PopupWithForm name={"card"} title={"Новое место"} buttonText={"Создать"} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} children={[
+        )}/>
+         <PopupWithForm name={"card"} title={"Новое место"} buttonText={"Создать"} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} children={(
                  <>
                          <input type="text"
                              id="card-form-name"
@@ -92,10 +92,10 @@ function App() {
                              required/>
                      <span id="card-form-link-error" className="error"></span>
                      </>
-                 ]}/>
+         )}/>
  
          <PopupWithForm name={"confirm"} title={"Вы уверены?"} buttonText={"Да"}/>
-         <PopupWithForm name={"avatar"} title={"Обновить аватар"} buttonText={"Сохранить"}  isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} children={[
+         <PopupWithForm name={"avatar"} title={"Обновить аватар"} buttonText={"Сохранить"}  isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} children={(
             <>
                  <input type="url" 
                      id="avatar-form-link"
@@ -107,7 +107,7 @@ function App() {
                      required/>
                  <span id="avatar-form-link-error" className="error"></span> 
              </>
-         ]}/>
+  )}/>
         <Footer />
     </div>
   );

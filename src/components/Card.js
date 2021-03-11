@@ -6,7 +6,7 @@ function Card(props) {
 
     return (
             <li className="card">
-                <img className="card__image" src={props.link} alt="изображение" onClick={handleClick}/>
+                <img className="card__image" src={props.link} alt={props.name} onClick={handleClick}/>
                     <div className="card__info">
                         <h2 className="card__name">{props.name}</h2>
                         <div className="card__button-like-container">
