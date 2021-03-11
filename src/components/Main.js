@@ -33,9 +33,9 @@ function Main(props) {
     return (
         <main className="content">
             <section className="profile">
-              <div className="profile__image-container">
+              <div className="profile__image-container" onClick={props.onEditAvatar}>
                     <img className="profile__image" src={`${userAvatar}`} alt="фото профиля"/>
-                    <button type="button" className="profile__avatar-button" onClick={props.onEditAvatar}></button>
+                    <button type="button" className="profile__avatar-button" ></button>
              </div>
 
                 <div className="profile__info">
@@ -50,15 +50,14 @@ function Main(props) {
             <section className="cards">
                 <ul className="cards__list">
                     {cards.map((card) => ( 
-                        <div key={card._id}>
-                            <Card    
+                            <Card   
+                                    key={card._id} 
                                     name = {card.name} 
                                     link={card.link} 
                                     alt={card.name}
                                     id={card._id} 
                                     likes={card.likes.length} 
                                     onCardClick={props.onCardClick} />
-                        </div>
                     ))}
                 </ul>
             </section>
