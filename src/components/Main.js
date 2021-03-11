@@ -20,17 +20,14 @@ function Main(props) {
     .catch((err) => {
         console.log(err)
     })
-    }, [])
-
-    React.useEffect(() => {
         api
         .getInitialCards()
         .then(cards => {
             setCards(cards)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+    })
+    .catch((err) => {
+        console.log(err)
+    })
     }, [])
 
     return (
@@ -52,16 +49,17 @@ function Main(props) {
             </section>
             <section className="cards">
                 <ul className="cards__list">
-                    {cards.map((card, i) => {
-                        return <Card
-                                    card= {{card}} 
+                    {cards.map((card) => ( 
+                        <div key={card._id}>
+                            <Card    
                                     name = {card.name} 
                                     link={card.link} 
-                                    alt={card.alt}
+                                    alt={card.name}
                                     id={card._id} 
                                     likes={card.likes.length} 
                                     onCardClick={props.onCardClick} />
-                    })}
+                        </div>
+                    ))}
                 </ul>
             </section>
         </main>

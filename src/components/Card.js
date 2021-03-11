@@ -1,11 +1,10 @@
 function Card(props) {
 
     function handleClick() {
-        props.onCardClick(props.card);
+        props.onCardClick(props.name, props.link);
       } 
 
     return (
-        <div key={props._id}>
             <li className="card">
                 <img className="card__image" src={props.link} alt="изображение" onClick={handleClick}/>
                     <div className="card__info">
@@ -17,7 +16,6 @@ function Card(props) {
                     </div>  
                     <button type="button" className="card__button-delete"></button>
             </li>
-        </div> 
     );
   }
   
