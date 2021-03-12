@@ -8,6 +8,11 @@ import Footer from './Footer';
 
 function App() {
 
+    const[isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
+    const[isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
+    const[isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+    const[selectedCard, setSelectedCard] = React.useState({name: ' ', link: ' ', alt: ' ', isOpen: false});
+
     function handleEditAvatarClick() {
         setEditAvatarPopupOpen(true);
     }
@@ -24,27 +29,19 @@ function App() {
         setEditAvatarPopupOpen(false);
         setEditProfilePopupOpen(false);
         setAddPlacePopupOpen(false);
-        setSelectedCard(false);
+        setSelectedCard({name: ' ', link: ' ', alt: ' ', isOpen: false});
     }
 
     function handleCardClick(name, link) {
         setSelectedCard({name: name, link: link, alt: name, isOpen: true});
     }
 
-
-    const[isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
-    const[isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-    const[isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-    const[selectedCard, setSelectedCard] = React.useState({name: ' ', link: ' ', isOpen: false});
-
-
   return (
     <div className="page">
         <Header />
         <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
         <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
-        <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} children={(
-            <>
+        <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} >
                  <input type="text"
                              id="profile-form-name"
                              autoComplete="off"
@@ -67,10 +64,8 @@ function App() {
                              defaultValue="Исследователь океана" 
                              placeholder="О себе"/>
                      <span id="profile-form-description-error" className="error"></span>
-             </>
-        )}/>
-         <PopupWithForm name={"card"} title={"Новое место"} buttonText={"Создать"} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} children={(
-                 <>
+         </PopupWithForm>
+         <PopupWithForm name={"card"} title={"Новое место"} buttonText={"Создать"} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} >
                          <input type="text"
                              id="card-form-name"
                              autoComplete="off" 
@@ -91,13 +86,10 @@ function App() {
                              placeholder="Ссылка на картинку" 
                              required/>
                      <span id="card-form-link-error" className="error"></span>
-                     </>
-         )}/>
- 
+         </PopupWithForm>
          <PopupWithForm name={"confirm"} title={"Вы уверены?"} buttonText={"Да"}/>
-         <PopupWithForm name={"avatar"} title={"Обновить аватар"} buttonText={"Сохранить"}  isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} children={(
-            <>
-                 <input type="url" 
+         <PopupWithForm name={"avatar"} title={"Обновить аватар"} buttonText={"Сохранить"}  isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} >
+                <input type="url" 
                      id="avatar-form-link"
                      autoComplete="off"
                      className="form__input_type_link form__input" 
@@ -106,8 +98,7 @@ function App() {
                      placeholder="" 
                      required/>
                  <span id="avatar-form-link-error" className="error"></span> 
-             </>
-  )}/>
+        </PopupWithForm>
         <Footer />
     </div>
   );
