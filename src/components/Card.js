@@ -1,4 +1,13 @@
+import React from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+
 function Card(props) {
+    const userContext = React.useContext(CurrentUserContext);
+    const isOwn = props.owner._id === userContext._id;
+    
+    const cardDeleteButtonClassName = (
+        `card__button-delete ${isOwn ? 'card__button-delete-visible' : 'card__button-delete-hidden'}`
+      ); 
 
     function handleClick() {
         props.onCardClick(props.name, props.link);
@@ -14,7 +23,7 @@ function Card(props) {
                             <p className="likes-counter">{props.likes}</p>
                         </div>
                     </div>  
-                    <button type="button" className="card__button-delete"></button>
+                    <button type="button" className={cardDeleteButtonClassName}></button>
             </li>
     );
   }

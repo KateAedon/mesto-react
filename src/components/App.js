@@ -20,7 +20,6 @@ function App() {
         .getProfileInfo()
         .then(res => {
             setCurrentUser(res)
-            console.log(res)
     })
     .catch((err) => {
         console.log(err)
@@ -55,7 +54,11 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
         <Header />
-        <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
+        <Main onEditProfile={handleEditProfileClick} 
+            onAddPlace={handleAddPlaceClick} 
+            onEditAvatar={handleEditAvatarClick} 
+            onCardClick={handleCardClick}
+            />
         <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
         <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} >
                  <input type="text"

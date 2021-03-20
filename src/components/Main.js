@@ -38,13 +38,14 @@ function Main(props) {
             </section>
             <section className="cards">
                 <ul className="cards__list">
-                    {cards.map((card) => ( 
+                    {cards.map((card) => (
                             <Card   
                                     key={card._id} 
                                     name = {card.name} 
                                     link={card.link} 
                                     alt={card.name}
                                     id={card._id} 
+                                    owner={card.owner._id}
                                     likes={card.likes.length} 
                                     onCardClick={props.onCardClick} />
                     ))}
