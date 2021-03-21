@@ -39,6 +39,14 @@ export class Api {
         }).then(this._handleResponse)
     }
 
+    changeLikeCardStatus(cardId, isLiked) {
+    if (isLiked) {
+        return this.deleteLike(cardId);
+      } else {
+        return this.addLike(cardId);
+      }
+    }
+
     saveProfileInfo(data) {
         return fetch(`${this.url}/users/me`, {
             method: "PATCH",
