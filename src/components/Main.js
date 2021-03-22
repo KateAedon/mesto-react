@@ -14,9 +14,6 @@ function Main(props) {
         .then(cards => {
             setCards(cards)
     })
-    .catch((err) => {
-        console.log(err)
-    })
     }, [])
 
     function handleCardLike(card) {
@@ -24,11 +21,20 @@ function Main(props) {
         api
         .changeLikeCardStatus(card._id, isLiked)
         .then((newCard) => {
-            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        });
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
+        })
     } 
 
-
+    function handleCardDelete(card) { 
+        api
+        .deleteCard(card._id)
+        .then(() => {
+            setCards((state) => state.filter((e => e._id !== card._id)))
+    })
+        .catch((err) => {
+            console.log(err)
+    })
+    }
 
     return (
         <main className="content">
@@ -56,9 +62,10 @@ function Main(props) {
                                     name = {card.name} 
                                     link={card.link} 
                                     alt={card.name}
-                                    owner={card.owner._id}
+                                    owner={card.owner}
                                     onCardClick={props.onCardClick}
                                     onCardLike ={handleCardLike}
+                                    onCardDelete={handleCardDelete}
                                     />
                     )}
                 </ul>
