@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
 import Footer from './Footer';
@@ -50,6 +51,18 @@ function App() {
         setSelectedCard({name: name, link: link, alt: name, isOpen: true});
     }
 
+    function handleUpdateUser(data) {
+        api
+        .saveProfileInfo(data)
+        .then(data => {
+            setCurrentUser(data)
+            closeAllPopups()
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
@@ -60,31 +73,8 @@ function App() {
             onCardClick={handleCardClick}
             />
         <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
-        <PopupWithForm name={"profile"} title={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} >
-                 <input type="text"
-                             id="profile-form-name"
-                             autoComplete="off"
-                             required 
-                             minLength="2"
-                             maxLength="40"
-                             className="form__input form__input_type_name" 
-                             name="name" 
-                             defaultValue="Жак-Ив Кусто" 
-                             placeholder="Имя"/>
-                     <span id="profile-form-name-error" className="error"></span>
-                     <input type="text"
-                             id="profile-form-description" 
-                             required
-                             minLength="2"
-                             maxLength="200"
-                             autoComplete="off"
-                             className="form__input form__input_type_about" 
-                             name="about" 
-                             defaultValue="Исследователь океана" 
-                             placeholder="О себе"/>
-                     <span id="profile-form-description-error" className="error"></span>
-         </PopupWithForm>
-         <PopupWithForm name={"card"} title={"Новое место"} buttonText={"Создать"} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} >
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
+        <PopupWithForm name={"card"} title={"Новое место"} buttonText={"Создать"} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} >
                          <input type="text"
                              id="card-form-name"
                              autoComplete="off" 
