@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
 import Footer from './Footer';
@@ -16,9 +17,9 @@ function App() {
     const[selectedCard, setSelectedCard] = React.useState({name: ' ', link: ' ', alt: ' ', isOpen: false});
     const[currentUser, setCurrentUser] = React.useState([]);
 
-    React.useEffect(() => {
+    React.useEffect((res) => {
         api
-        .getProfileInfo()
+        .getProfileInfo(res)
         .then(res => {
             setCurrentUser(res)
     })
@@ -49,6 +50,18 @@ function App() {
 
     function handleCardClick(name, link) {
         setSelectedCard({name: name, link: link, alt: name, isOpen: true});
+    }
+    
+    function handleUpdateAvatar(data) {
+        api
+        .saveAvatar(data.avatar)
+        .then((data) => {
+            setCurrentUser(data)
+            closeAllPopups()
+    })
+    .catch((err) => {
+        console.log(err)
+    })
     }
 
     function handleUpdateUser(data) {
@@ -97,17 +110,7 @@ function App() {
                      <span id="card-form-link-error" className="error"></span>
          </PopupWithForm>
          <PopupWithForm name={"confirm"} title={"Вы уверены?"} buttonText={"Да"}/>
-         <PopupWithForm name={"avatar"} title={"Обновить аватар"} buttonText={"Сохранить"}  isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} >
-                <input type="url" 
-                     id="avatar-form-link"
-                     autoComplete="off"
-                     className="form__input_type_link form__input" 
-                     name="avatar" 
-                     defaultValue="" 
-                     placeholder="" 
-                     required/>
-                 <span id="avatar-form-link-error" className="error"></span> 
-        </PopupWithForm>
+         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <Footer />
     </div>
     </CurrentUserContext.Provider>
