@@ -43,7 +43,7 @@ export class Api {
     if (isLiked) {
         return this.deleteLike(cardId);
       } else {
-        return this.setLike(cardId);
+        return this.addLike(cardId);
       }
     }
 
