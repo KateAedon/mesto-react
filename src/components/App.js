@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, Switch, Redirect } from "react-router-dom";
 import Header from './Header';
 import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
@@ -7,7 +8,10 @@ import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
 import Footer from './Footer';
-import api from '../utils/api';
+import Login from './Login';
+import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
+import api, { Api } from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
@@ -119,18 +123,44 @@ function App() {
     })
     }
 
+    const handleRegister = ({ email, password }) => {
+        console.log({ email, password })
+        return api
+                .register({ email, password })
+                .then((res) => {
+          if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так');
+          return res;
+        })
+        .catch()
+      }
+    
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
         <Header />
-        <Main onEditProfile={handleEditProfileClick} 
-            onAddPlace={handleAddPlaceClick} 
-            onEditAvatar={handleEditAvatarClick} 
-            onCardClick={handleCardClick}
-            onCardLike ={handleCardLike}
-            onCardDelete={handleCardDelete}
-            cards={cards}
+        <Switch>
+            <ProtectedRoute
+                path="/main"
+                
+                component={Main}
+                onEditProfile={handleEditProfileClick} 
+                onAddPlace={handleAddPlaceClick} 
+                onEditAvatar={handleEditAvatarClick} 
+                onCardClick={handleCardClick}
+                onCardLike ={handleCardLike}
+                onCardDelete={handleCardDelete}
+                cards={cards}
             />
+            <Route path="/sign-in">
+                <Login />
+            </Route>
+            <Route path="/sign-up">
+                <div className="register__container">
+                    <Register onRegister={handleRegister}/>
+                </div>
+            </Route>
+        </Switch>
         <ImagePopup 
             onClose={closeAllPopups} 
             card={selectedCard}/>

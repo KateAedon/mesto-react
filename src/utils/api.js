@@ -79,6 +79,18 @@ export class Api {
             headers: this.headers,
         }).then(this._handleResponse)
     }
+
+
+    register = ({ email, password }) => {
+        return fetch(`https://mesto.nomoreparties.co/signup`, {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        }).then(this._handleResponse)
+    }
 }
 
 const api = new Api({
