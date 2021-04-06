@@ -45,3 +45,10 @@
 @import url(../src/blocks/form/__confirm-button/form__confirm-button.css);
 @import url(../src/blocks/popup/__heading/popup-confirm__heading.css);
 @import url(../src/blocks/profile/__avatar-button/profile__avatar-button.css);
+@import url(../src/blocks/form/__input/form__input_type_account.css);
+@import url(../src/blocks/account/account.css);
+@import url(../src/blocks/account/__container/account__container.css);
+@import url(../src/blocks/account/__button/account__button.css);
+@import url(../src/blocks/account/__heading/account__heading.css);
+@import url(../src/blocks/account/__link/account__link.css);
+@import url(../src/blocks/account/__link/account__link_container.css);

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Switch, Redirect } from "react-router-dom";
+import React, {useState, useEffect} from 'react';
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import Header from './Header';
 import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
@@ -11,7 +11,8 @@ import Footer from './Footer';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
-import api, { Api } from '../utils/api';
+import api from '../utils/api';
+import auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
@@ -22,8 +23,7 @@ function App() {
     const[selectedCard, setSelectedCard] = React.useState({name: ' ', link: ' ', alt: ' ', isOpen: false});
     const[currentUser, setCurrentUser] = React.useState([]);
     const[cards, setCards] = React.useState([]);
-
-
+    
     React.useEffect((res) => {
         api
         .getProfileInfo(res)
@@ -123,9 +123,27 @@ function App() {
     })
     }
 
+    const [userData, setUserData] = useState({
+        email: '',
+        password: ''
+      })
+
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    const history = useHistory();
+
+    useEffect(() => {
+        tokenCheck()
+      }, [])
+    
+      useEffect(() => {
+        if (loggedIn) {
+          history.push("/main");
+        }
+      }, [loggedIn])
+
     const handleRegister = ({ email, password }) => {
-        console.log({ email, password })
-        return api
+          return auth
                 .register({ email, password })
                 .then((res) => {
           if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так');
@@ -133,16 +151,50 @@ function App() {
         })
         .catch()
       }
+
+    const handleLogin = ({ email, password }) => {
+        return auth
+                .authorize(email, password)
+                .then((data) => {
+            if (!data) throw new Error('Неверные имя пользователя или пароль')
+            if (data.jwt) {
+            setLoggedIn(true)
+              localStorage.setItem('jwt', data.jwt)
+              history.push('/main')
+              return;
+            }
+          })
+      }
+
+    const handleSignOut = () => {
+        localStorage.removeItem('jwt');
+        history.push('/sign-in');
+    }
+    
+    const tokenCheck = () => {
+        if (localStorage.getItem('jwt')) {
+          let jwt = localStorage.getItem('jwt');
+          auth
+          .checkToken(jwt)
+          .then(({ username, email }) => {
+            if (username) {
+              setLoggedIn(true)
+              setUserData({ username, email })
+            }
+          });
+        }
+      }
     
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
-        <Header />
+        <Header onClick={handleSignOut} email={userData.email}/>
         <Switch>
             <ProtectedRoute
-                path="/main"
-                
+                exact = 'exact'
+                path="/"
+                loggedIn={loggedIn}
                 component={Main}
                 onEditProfile={handleEditProfileClick} 
                 onAddPlace={handleAddPlaceClick} 
@@ -152,13 +204,18 @@ function App() {
                 onCardDelete={handleCardDelete}
                 cards={cards}
             />
-            <Route path="/sign-in">
-                <Login />
-            </Route>
-            <Route path="/sign-up">
-                <div className="register__container">
-                    <Register onRegister={handleRegister}/>
+            <Route exact path="/sign-in">
+                <div className="account__container">
+                    <Login onLogin={handleLogin} />
                 </div>
+            </Route>
+            <Route exact path="/sign-up">
+                <div className="account__container">
+                    <Register onRegister={handleRegister} />
+                </div>
+            </Route>
+            <Route>
+                {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
             </Route>
         </Switch>
         <ImagePopup 
@@ -180,7 +237,7 @@ function App() {
             isOpen={isEditAvatarPopupOpen} 
             onClose={closeAllPopups} 
             onUpdateAvatar={handleUpdateAvatar} />
-        <Footer />
+        {loggedIn && <Footer />}
     </div>
     </CurrentUserContext.Provider>
   );

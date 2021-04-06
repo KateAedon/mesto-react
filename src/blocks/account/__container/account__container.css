@@ -1,0 +1,10 @@
+.account__container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 358px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
