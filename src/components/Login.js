@@ -1,27 +1,34 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import * as auth from '../utils/auth.js';
+import { Link, useHistory } from "react-router-dom";
 
-function Login({onLogin}) {
+function Login(props) {
 
-    const [userData, setUserData] = useState({
-        email: '',
-        password: ''
-      })
-
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const history = useHistory();
     const [message, setMessage] = useState()
     
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUserData({
-          ...userData,
-          [name]: value
-        });
-      }
+    function handleEmail(e) {
+      setEmail(e.target.value);
+    }
+  
+    function handlePassword(e) {
+      setPassword(e.target.value);
+    }
 
     const handleSubmit = (e) => {
-        let { email, password } = userData;
         e.preventDefault();
-        onLogin({ email, password })
+        auth
+            .authorize(email, password)
+            .then((data) => {
+              if (!data) throw new Error('Неверные имя пользователя или пароль')
+              if (data.jwt) {
+              props.isLoggedIn(true)
+              history.push('/')
+              return;
+            }
+          })
       }
 
     return (
@@ -30,8 +37,8 @@ function Login({onLogin}) {
             <p className="login__error">{message}</p>
             <form className="form register__form" name="login__form" onSubmit={handleSubmit}>
                 <input type="text"
-                            value={userData.email}
-                            onChange={handleChange}
+                            value={email}
+                            onChange={handleEmail}
                             id="login-form-email"
                             autoComplete="off" 
                             minLength="2"
@@ -41,8 +48,8 @@ function Login({onLogin}) {
                             placeholder="Email" 
                             required/>
                 <input type="password"
-                            value={userData.password}
-                            onChange={handleChange} 
+                            value={password}
+                            onChange={handlePassword} 
                             id="login-form-password"
                             autoComplete="off"
                             className="form__input_type_account form__input" 

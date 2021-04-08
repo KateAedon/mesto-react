@@ -52,3 +52,6 @@
 @import url(../src/blocks/account/__heading/account__heading.css);
 @import url(../src/blocks/account/__link/account__link.css);
 @import url(../src/blocks/account/__link/account__link_container.css);
+@import url(../src/blocks/header/__navbar/header__navbar.css);
+@import url(../src/blocks/header/__navbar/__navbar-email/header__navbar-email.css);
+@import url(../src/blocks/header/__navbar/__navbar-link/header__navbar-link.css);

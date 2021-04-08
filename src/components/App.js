@@ -12,7 +12,7 @@ import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import api from '../utils/api';
-import auth from '../utils/auth';
+import * as auth from '../utils/auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
@@ -129,7 +129,7 @@ function App() {
       })
 
     const [loggedIn, setLoggedIn] = useState(false);
-
+    const [email, setEmail] = React.useState('');
     const history = useHistory();
 
     useEffect(() => {
@@ -141,55 +141,27 @@ function App() {
           history.push("/main");
         }
       }, [loggedIn])
-
-    const handleRegister = ({ email, password }) => {
-          return auth
-                .register({ email, password })
-                .then((res) => {
-          if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так');
-          return res;
-        })
-        .catch()
-      }
-
-    const handleLogin = ({ email, password }) => {
-        return auth
-                .authorize(email, password)
-                .then((data) => {
-            if (!data) throw new Error('Неверные имя пользователя или пароль')
-            if (data.jwt) {
-            setLoggedIn(true)
-              localStorage.setItem('jwt', data.jwt)
-              history.push('/main')
-              return;
-            }
-          })
-      }
-
-    const handleSignOut = () => {
-        localStorage.removeItem('jwt');
-        history.push('/sign-in');
-    }
     
     const tokenCheck = () => {
-        if (localStorage.getItem('jwt')) {
-          let jwt = localStorage.getItem('jwt');
+        if (localStorage.getItem('token')) {
+          let token = localStorage.getItem('token');
           auth
-          .checkToken(jwt)
-          .then(({ username, email }) => {
-            if (username) {
-              setLoggedIn(true)
-              setUserData({ username, email })
+          .checkToken(token)
+          .then((res) => {
+            if (res) {
+              setLoggedIn(true);
+              history.push('/')
+              setEmail(res.data.email);
             }
-          });
-        }
+          })
+          .catch((err) => console.log(err));
       }
-    
+    }  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
-        <Header onClick={handleSignOut} email={userData.email}/>
+        <Header loggedIn={loggedIn} isLoggedIn={setLoggedIn} email={email}/>
         <Switch>
             <ProtectedRoute
                 exact = 'exact'
@@ -206,12 +178,12 @@ function App() {
             />
             <Route exact path="/sign-in">
                 <div className="account__container">
-                    <Login onLogin={handleLogin} />
+                    <Login  isLoggedIn={setLoggedIn}/>
                 </div>
             </Route>
             <Route exact path="/sign-up">
                 <div className="account__container">
-                    <Register onRegister={handleRegister} />
+                    <Register />
                 </div>
             </Route>
             <Route>

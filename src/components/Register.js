@@ -1,28 +1,33 @@
 import React, { useState, Button } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from 'react-router-dom';
+import * as auth from '../utils/auth.js';
 
 function Register({onRegister}) {
 
-    const [userData, setUserData] = useState({
-        email: '',
-        password: ''
-      })
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const history = useHistory();
+
+  function handleEmail(e) {
+    setEmail(e.target.value);
+  }
+
+  function handlePassword(e) {
+    setPassword(e.target.value);
+  }
 
     const [message, setMessage] = useState()
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUserData({
-          ...userData,
-          [name]: value
-        });
-      }
-
     const handleSubmit = (e) => {
-        let { email, password } = userData;
         e.preventDefault();
-        onRegister({ email, password });
-        
+        auth
+        .register(email, password)
+        history.push('/sign-in')
+        .then((res) => {
+          if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так');
+          return res;
+        })
+        .catch()
       }
 
     return (
@@ -31,9 +36,9 @@ function Register({onRegister}) {
             <p className="register__error">{message}</p>
             <form className="form account__form" name="register__form" onSubmit={handleSubmit}>
                 <input type="text"
-                            value={userData.email}
-                            onChange={handleChange}
-                            id="register__form-email"
+                            value={email}
+                            onChange={handleEmail}
+                            id="register-form-email"
                             autoComplete="off" 
                             minLength="2"
                             maxLength="30"
@@ -42,9 +47,9 @@ function Register({onRegister}) {
                             placeholder="Email" 
                             required/>
                 <input type="password"
-                            value={userData.password}
-                            onChange={handleChange} 
-                            id="register__form-password"
+                            value={password}
+                            onChange={handlePassword} 
+                            id="register-form-password"
                             autoComplete="off"
                             className="form__input_type_account form__input" 
                             name="password" 

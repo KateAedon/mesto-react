@@ -1,28 +1,21 @@
-export class Auth {
-    constructor(config) {
-        this.url = config.url;
-        this.headers = config.headers;
-    }
-
-    _handleResponse(res) {
-        if (!res.ok ) {
-            return Promise.reject(console.log(`Ой, что-то пошло не так. Ошибка ${res.status}`));
-        }
-        return res.json();
-    }
-
-    register = ( email, password ) => {
+    export const register = ( email, password ) => {
         return fetch(`https://auth.nomoreparties.co/signup`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
               },
             body: JSON.stringify({ email, password })
-        }).then(this._handleResponse)
+        }).then(res => {
+          if (!res.ok ) {
+            return Promise.reject(console.log(`Ой, что-то пошло не так. Ошибка ${res.status}`))
+        } else {
+          console.log(res)
+          return res.json();
+        }
+      });
     }
 
-
-    authorize = ( email, password ) => {
+    export const authorize = ( email, password ) => {
     return fetch(`https://auth.nomoreparties.co/signin`, {
       method: 'POST',
       headers: {
@@ -30,19 +23,26 @@ export class Auth {
       },
       body: JSON.stringify({ email, password })
     })
-    .then(this._handleResponse)
+    .then(res => {
+        if (!res.ok ) {
+          return Promise.reject(console.log(`Ой, что-то пошло не так. Ошибка ${res.status}`))
+      } else {
+        console.log(res)
+        return res.json();
+      }
+    })
     .then((data) => {
         if (data) {
           localStorage.setItem('token', data.token);
           return data;
-        }else {
+        } else {
           return;
         }
       })
       .catch(err => console.log(err))
-  }
+    };
 
-  checkToken = (token) => {
+  export const checkToken = (token) => {
     return fetch(`https://auth.nomoreparties.co/users/me`, {
       method: 'GET',
       headers: {
@@ -50,15 +50,7 @@ export class Auth {
           "Authorization": `Bearer ${token}`
         }
     })
-    .then(this._handleResponse)
-  }
-}
-
-const auth = new Auth({
-    baseUrl: 'https://auth.nomoreparties.co',
-    headers: {
-        'Content-type': 'application/json'
-    }
-})
-
-export default auth;
+    .then(res => res.json())
+    .then(data => data)
+    .catch(err => console.log(err))
+};
