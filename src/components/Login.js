@@ -23,7 +23,7 @@ function Login(props) {
             .authorize(email, password)
             .then((data) => {
               if (!data) throw new Error('Неверные имя пользователя или пароль')
-              if (data.jwt) {
+              if (data.token) {
               props.isLoggedIn(true)
               history.push('/')
               return;
