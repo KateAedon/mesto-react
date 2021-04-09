@@ -138,11 +138,6 @@ function App() {
     })
     }
 
-    const [userData, setUserData] = useState({
-        email: '',
-        password: ''
-      })
-
     const [loggedIn, setLoggedIn] = useState(false);
     const [email, setEmail] = React.useState('');
     const history = useHistory();
