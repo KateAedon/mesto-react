@@ -9,17 +9,22 @@ import ImagePopup from './ImagePopup';
 import Main from './Main';
 import Footer from './Footer';
 import Login from './Login';
+import InfoTooltip from './InfoTooltip';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import api from '../utils/api';
 import * as auth from '../utils/auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import success from '../images/success.svg';
+import fail from '../images/fail.svg';
 
 function App() {
 
     const[isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
     const[isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
     const[isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+    const[isSuccessPopupOpen, setSuccessPopupOpen] = React.useState(false);
+    const[isFailPopupOpen, setFailPopupOpen] = React.useState(false);
     const[selectedCard, setSelectedCard] = React.useState({name: ' ', link: ' ', alt: ' ', isOpen: false});
     const[currentUser, setCurrentUser] = React.useState([]);
     const[cards, setCards] = React.useState([]);
@@ -55,10 +60,20 @@ function App() {
         setAddPlacePopupOpen(true);
     }
 
+    function handleSuccessRegistration() {
+        setSuccessPopupOpen(true);
+    }
+
+    function handleFailRegistration() {
+        setFailPopupOpen(true);
+    }
+
     function closeAllPopups() {
         setEditAvatarPopupOpen(false);
         setEditProfilePopupOpen(false);
         setAddPlacePopupOpen(false);
+        setSuccessPopupOpen(false);
+        setFailPopupOpen(false);
         setSelectedCard({name: ' ', link: ' ', alt: ' ', isOpen: false});
     }
 
@@ -183,7 +198,7 @@ function App() {
             </Route>
             <Route exact path="/sign-up">
                 <div className="account__container">
-                    <Register />
+                    <Register onSuccess={handleSuccessRegistration} onFail={handleFailRegistration}/>
                 </div>
             </Route>
             <Route>
@@ -209,6 +224,19 @@ function App() {
             isOpen={isEditAvatarPopupOpen} 
             onClose={closeAllPopups} 
             onUpdateAvatar={handleUpdateAvatar} />
+         <InfoTooltip
+            isOpen={isSuccessPopupOpen}
+            onClose={closeAllPopups}
+            src={success}
+            status={"Успешная регистрация"}
+            title="Вы успешно зарегистрировались!" />
+        <InfoTooltip
+            isOpen={isFailPopupOpen}
+            onClose={closeAllPopups}
+            src={fail}
+            status={"Ошибка регистрации"}
+            title="Что-то пошло не так!
+            Попробуйте ещё раз." />
         {loggedIn && <Footer />}
     </div>
     </CurrentUserContext.Provider>

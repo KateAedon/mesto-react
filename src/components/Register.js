@@ -2,7 +2,7 @@ import React, { useState, Button } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import * as auth from '../utils/auth.js';
 
-function Register({onRegister}) {
+function Register(props) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -22,13 +22,16 @@ function Register({onRegister}) {
         e.preventDefault();
         auth
         .register(email, password)
-        history.push('/sign-in')
-        .then((res) => {
-          if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так');
-          return res;
+        .then(
+          (res) => {
+            props.onSuccess();
+            history.push('/sign-in');
+        },
+        (err) => {
+          console.log(err);
+          props.onFail();
         })
-        .catch()
-      }
+  }
 
     return (
         <div className="account account-register">

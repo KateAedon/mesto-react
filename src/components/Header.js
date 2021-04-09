@@ -17,6 +17,7 @@ function Header(props) {
     return (
         <header className="header">
             <img className="header__logo" src={logo} alt="Логотип Mesto"/>
+            <div className="header__navbar">
                 {props.loggedIn &&  
                     (
                     <div className="header__navbar">
@@ -27,12 +28,14 @@ function Header(props) {
                 }
                 {!props.loggedIn &&
                       <div className="header__navbar">
-                            {(location === '/sign-in') ?
+                            {
+                            (location === '/sign-in') ?
                                 <Link to="/sign-up" className="header__navbar-link">Регистрация</Link> :
                                 <Link to="/sign-in" className="header__navbar-link">Войти</Link>
                             }
                         </div>
                     }
+            </div>
         </header> 
     );
   }

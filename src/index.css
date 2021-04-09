@@ -55,3 +55,6 @@
 @import url(../src/blocks/header/__navbar/header__navbar.css);
 @import url(../src/blocks/header/__navbar/__navbar-email/header__navbar-email.css);
 @import url(../src/blocks/header/__navbar/__navbar-link/header__navbar-link.css);
+@import url(../src/blocks/popup/__status/popup__status.css);
+@import url(../src/blocks/popup/__status/popup__status-image.css);
+@import url(../src/blocks/popup/__status/popup-status__heading.css);
